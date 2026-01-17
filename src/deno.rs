@@ -1,6 +1,6 @@
 use std::fs;
-use zed::lsp::CompletionKind;
-use zed::{serde_json, CodeLabel, CodeLabelSpan, LanguageServerId};
+use zed::lsp::{CompletionKind, VirtualDocumentConfig, VirtualDocumentParamKind};
+use zed::{serde_json, CodeLabel, CodeLabelSpan, LanguageServerId, Worktree};
 use zed_extension_api::settings::LspSettings;
 use zed_extension_api::{self as zed, Result};
 
@@ -163,6 +163,24 @@ impl zed::Extension for DenoExtension {
             },
             filter_range: (0..len).into(),
         })
+    }
+
+    fn language_server_virtual_document_configs(
+        &mut self,
+        language_server_id: &LanguageServerId,
+        _worktree: &Worktree,
+    ) -> Result<Vec<VirtualDocumentConfig>> {
+        if language_server_id.as_ref() != "deno" {
+            return Ok(Vec::new());
+        }
+
+        Ok(vec![VirtualDocumentConfig {
+            scheme: "deno".to_string(),
+            content_request_method: "deno/virtualTextDocument".to_string(),
+            language_name: "TypeScript".to_string(),
+            language_id: "typescript".to_string(),
+            param_kind: Some(VirtualDocumentParamKind::Uri),
+        }])
     }
 }
 
