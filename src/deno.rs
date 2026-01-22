@@ -179,7 +179,7 @@ impl zed::Extension for DenoExtension {
             content_request_method: "deno/virtualTextDocument".to_string(),
             language_name: "TypeScript".to_string(),
             language_id: "typescript".to_string(),
-            param_kind: Some(VirtualDocumentParamKind::Uri),
+            param_kind: Some(VirtualDocumentParamKind::UriWithPosition),
         }])
     }
 }
